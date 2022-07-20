@@ -15,7 +15,6 @@ const Container = styled.div`
       border:0.5px solid grey;
       background-color:white;
       width:200px;
-      position:absolute;
       z-index:${props => props.zIndex} ;
 
       &:hover{
@@ -42,29 +41,16 @@ const Button = styled.button`
 
 export const Component = (info) => {
   const [z, setZ] = useState(0);
-  const id = info.id;
-  const items = info.items;
-  console.log("component id: ", id)
-  console.log("array contains: ", items)
 
     const handleZIndex = (type) => {
       type == "inc" ? setZ(z+1) : setZ(z-1);
       console.log(z);
     };
 
-    const handleDelete = (id) => {
-      console.log(items)
-      var oldItems = [...items];
-      oldItems.splice(id-1,1);
-      info.setItems(oldItems);
-      console.log("Item deleted");
-    };
 
 
     return (
-        <Draggable
-        bounds="body"
-        >
+
           <Container zIndex={z}>
             {info.type == "text" ?
             <Text>{info.text}</Text> : <Image src={info.src}/>}
@@ -77,12 +63,8 @@ export const Component = (info) => {
               <Button onClick={()=> handleZIndex("dec")}>
                   <ArrowDownward/>
               </Button>
-              <Button onClick={()=> handleDelete(id)}>
-                  <Close/>
-              </Button>
             </Panel>
           </Container>
-        </Draggable>
     )
 }
 

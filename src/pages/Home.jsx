@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import Component from '../components/Component'
 import Draggable from 'react-draggable'
 import Introduction from '../components/Introduction'
+import RenderBoard from '../components/RenderBoard'
 import {Add, Remove, Close} from '@mui/icons-material'
 
 
@@ -93,14 +94,14 @@ export const Home = () => {
     console.log(component);
   }, [items])
 
-  const renderBoard = () => {
-    return items?.map((item,index) => {
-      return <ComponentContainer key={index} >
-      {item}
-      </ComponentContainer>
-    })
-  }
 
+  const handleDelete = (id) => {
+    console.log(items)
+    var oldItems = [...items];
+    oldItems.splice(id-1,1);
+    setItems(oldItems);
+    console.log("Item deleted");
+  };
 
 
   const handleInput = (e) => {
@@ -114,7 +115,7 @@ export const Home = () => {
 
   const addItem = (text) => {
     var newItems = [...items];
-    newItems.push(<Component id={newItems?.length} text={component["text"]} type={component["type"]} src={component["src"]} items={items} setItems={setItems}/>);
+    newItems.push(<Component text={component["text"]} type={component["type"]} src={component["src"]}/>);
     setItems(newItems);
   }
 
@@ -138,9 +139,10 @@ export const Home = () => {
           </Information>
 
           <Board>
-            {renderBoard()}
+            <RenderBoard items={items} handleDelete={handleDelete}/>
           </Board>
         </Container>
     )
 }
+
 export default Home;
