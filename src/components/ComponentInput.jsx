@@ -1,7 +1,6 @@
 import {React, useState, useEffect} from 'react'
 import styled from 'styled-components'
-import {setGlobalState,useGlobalState} from '../initialiseState';
-import Component from './Component'
+
 const Container = styled.div`
 
 `
@@ -28,7 +27,7 @@ const FilterTypeOption = styled.option`
 `
 const Button = styled.button``
 
-export const ComponentInput = () => {
+export const Navbar = () => {
     const [type, setType] = useState();
     const [items, setItems] = useState(useGlobalState("items"));
     const types = ["text","video","image"];
