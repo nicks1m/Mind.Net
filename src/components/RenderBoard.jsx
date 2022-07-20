@@ -17,8 +17,8 @@ const ComponentContainer = styled.div`
     position:absolute;
     display:flex;
     z-index:${props => props.zIndex};
-    width:150px;
-    min-height:100px;
+    min-width:130px;
+    min-height:50px;
     justify-content:center;
     text-align:center;
     align-content:center;
@@ -50,6 +50,7 @@ const Title = styled.div`
 const Image = styled.img`
       width:100%;
 `
+const Wrapper = styled.div``
 
 const ImageWrapper = styled.div`
       width:100%;
@@ -57,27 +58,39 @@ const ImageWrapper = styled.div`
 const Id = styled.span``
 const Video = styled.video``
 
-export const RenderBoard = ({ handleDelete, handleZinc, handleZdec }) => {
-
-  const renderSwitch = (type,src,text) =>{
-    switch(type){
+export const RenderBoard = ({ handleXY, handleDelete, handleZinc, handleZdec }) => {
+  const renderSwitch = (type, src, text) => {
+    switch (type) {
       case 'image':
-        return <Image src={src}/>
+        return <Wrapper>
+                <Title>{text}</Title>
+                <Image src={src} />
+              </Wrapper>
       case 'text':
-        return <Title>{text}</Title>  
+        return <Wrapper>
+                <Title>{text}</Title>
+               </Wrapper>
     }
   }
 
   const itemList = useSelector(state => state.items);
 
   return itemList.items.length < 1 ? <p></p> : itemList.items.map((item, index) => {
+    const handleStop = (e, data) => {
+      console.log('Data: ', data.x);
+      console.log('Data: ', data.y);
+      handleXY(item.id,data.x,data.y);
+
+    };
     return (
-      <Draggable>
+      <Draggable
+      defaultPosition={{x:item.x,y:item.y}}
+      onStop={handleStop}
+      >
         <ComponentContainer key={item.id} zIndex={item.z}>
           <Container>
             {/* <Id>{item.id}</Id> */}
-            {renderSwitch(item.type,item.src,item.text)}
-            <Title>{item.text}</Title>
+            {renderSwitch(item.type, item.src, item.text)}
           </Container>
           <Panel>
             <Button onClick={() => handleDelete(item.id)}>

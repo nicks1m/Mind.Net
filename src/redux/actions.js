@@ -25,9 +25,16 @@ export const itemsSlice = createSlice({
             }
             state.items[i].z = 0;
         },
+        updateXY: (state, action) => {
+            let i = state.items.findIndex(e => e.id === action.payload.id);
+            state.items[i].x = action.payload.x;
+            state.items[i].y = action.payload.y;
+
+        },
+
     },
 })
 
-export const { insertItem, removeItem, incrementZ, decrementZ } = itemsSlice.actions
+export const { insertItem, removeItem, incrementZ, decrementZ, updateXY } = itemsSlice.actions
 
 export default itemsSlice.reducer

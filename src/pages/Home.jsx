@@ -4,7 +4,7 @@ import Introduction from '../components/Introduction'
 import RenderBoard from '../components/RenderBoard'
 import { Add, Remove, Close } from '@mui/icons-material'
 import { useSelector, useDispatch } from 'react-redux'
-import { insertItem, removeItem, incrementZ, decrementZ } from '../redux/actions'
+import { insertItem, removeItem, incrementZ, decrementZ, updateXY } from '../redux/actions'
 
 
 const Container = styled.div`
@@ -111,6 +111,10 @@ export const Home = () => {
             dispatch(decrementZ(id))
       };
 
+      const handleXY = (id,x,y) => {
+            dispatch(updateXY({id,x,y}));
+      }
+
       const handleInput = (e) => {
             setComponent({ ...component, text: e.target.value });
       };
@@ -120,6 +124,8 @@ export const Home = () => {
       };
 
 
+
+
       const addItem = (text) => {
             dispatch(insertItem({
                   id: `${Math.floor(Math.random() * 100)}`,
@@ -127,6 +133,8 @@ export const Home = () => {
                   type: `${component["type"]}`,
                   src: `${component["src"]}`,
                   z: 0,
+                  x:0,
+                  y:0,
             }));
             setComponent({
                   type: "text",
@@ -154,7 +162,7 @@ export const Home = () => {
                         <Button onClick={() => addItem(field)}>Add</Button>
                   </Information>
                   <Board>
-                        <RenderBoard handleDelete={handleDelete} handleZinc={handleZinc} handleZdec={handleZdec} />
+                        <RenderBoard handleXY={handleXY} handleDelete={handleDelete} handleZinc={handleZinc} handleZdec={handleZdec} />
                   </Board>
             </Container>
       )
