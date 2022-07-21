@@ -1,35 +1,21 @@
 import { React, useState, useEffect } from 'react'
 import styled from 'styled-components'
-import Introduction from '../components/Introduction'
 import RenderBoard from '../components/RenderBoard'
-import { Add, Remove, Close } from '@mui/icons-material'
+import AddComponent from '../components/AddComponent'
 import { useSelector, useDispatch } from 'react-redux'
-import { insertItem, removeItem, editZ, updateXY, editText, editTitle, editScale } from '../redux/actions'
+import { removeItem, editZ, updateXY, editText, editTitle, editScale } from '../redux/actions'
 
 
 const Container = styled.div`
       min-height:100vh;
       position:relative;
 `
-const ComponentContainer = styled.div`
-      position:relative;
-`
-
 const Board = styled.div`
       position:relative;
       width:100%;
       top:0;
       min-height:100vh;
 `
-const Intro = styled.div`
-      padding-left: 25%;
-      padding-right: 25%;
-`
-const Title = styled.span`
-      width:10%;
-      font-weight:900;
-`
-
 const Description = styled.div``
 
 const Information = styled.div`
@@ -44,53 +30,10 @@ const Information = styled.div`
       text-align:center;
       z-index:5;
 `
-
-const Input = styled.input`
-      width:50%;
-      height:80%;
-`
-const InputWrapper = styled.div`
-      justify-content:center;
-      align-content:center;
-      display:flex;
-      flex:2;
-      padding-right:20px;
-`
-
-const FilterType = styled.select`
-      width:100px;
-      margin-left:5px;
-      padding:5px;
-      border:1px solid black;
-      font-weight:900;
-      height:100%;
-`
-const FilterTypeOption = styled.option`
-      font-weight:900;
-`
-const Button = styled.button`
-      width:20%;
-      
-`
-
-const Label = styled.span`
-      font-size:16px;
-      height:100%;
-      margin-left:20px;
-      margin-right:20px;
-`
-
 export const Home = () => {
       const [items, setItems] = useState([]);
-      const [component, setComponent] = useState({
-            type: "text",
-            title:"",
-            text: "",
-            src: "",
-      })
       const [type, setType] = useState();
       const [field, setField] = useState();
-      const types = ["text", "image"];
 
       const itemList = useSelector(state => state.items.items);
       const dispatch = useDispatch();
@@ -119,63 +62,15 @@ export const Home = () => {
             dispatch(updateXY({id,x,y}));
       }
 
-      const handleTextInput = (e) => {
-            e.preventDefault();
-            setComponent({ ...component, text: e.target.value });
-      };
-
-      const handleTitleInput = (e) => {
-            e.preventDefault();
-            setComponent({ ...component, title: e.target.value });
-      };
-
-      const handleSrc = (e) => {
-            e.preventDefault();
-            setComponent({ ...component, src: e.target.value });
-      };
 
       const handleScale = (id, type) => {
             dispatch(editScale({id,type}));
       };
 
-      const addItem = (text) => {
-            dispatch(insertItem({
-                  id: `${Math.floor(Math.random() * 10000)}`,
-                  title:`${component["title"]}`,
-                  type: `${component["type"]}`,
-                  text: `${component["text"]}`,
-                  src: `${component["src"]}`,
-                  z:0,
-                  x:0,
-                  y:0,
-                  scale:1
-            }));
-            setComponent({
-                  type: "text",
-                  title:"",
-                  text: "",
-                  src: "",
-            })
-      }
+      
       return (
             <Container>
-                  <Information>
-                        <Title>Add component</Title>
-                        <FilterType onChange={(e) => setComponent({ ...component, type: e.target.value })}>
-                              {types.map((t) => (
-                                    <FilterTypeOption key={t}>{t}</FilterTypeOption>
-                              ))}
-                        </FilterType>
-                        <InputWrapper>
-                              <Label>Title: </Label>
-                              <Input value={component["title"]} onChange={(e) => handleTitleInput(e)}></Input>
-                              <Label>Text: </Label>
-                              <Input value={component["text"]} onChange={(e) => handleTextInput(e)}></Input>
-                              <Label>Src: </Label>
-                              <Input value={component["src"]} onChange={(e) => handleSrc(e)}></Input>
-                        </InputWrapper>
-                        <Button onClick={() => addItem(field)}>Add</Button>
-                  </Information>
+                  <AddComponent/>     
                   <Board>
                         <RenderBoard handleTitleEdit={handleTitleEdit} handleXY={handleXY} handleDelete={handleDelete}
                         handleZ={handleZ} handleTextEdit={handleTextEdit} handleScale={handleScale} />

@@ -19,8 +19,9 @@ const Wrapper = styled.div`
     transition-duration: 150ms;
     transform:${props => `scale(${props.scale})`};
 
-
 `
+
+const ContentWrapper = styled.div``
 
 const ComponentContainer = styled.div`
     position:absolute;
@@ -71,66 +72,69 @@ const Image = styled.img`
 
 const ImageWrapper = styled.div`
       width:100%;
+      margin-top:5px;
 `
 const Id = styled.span``
 const Video = styled.video``
 
-export const RenderBoard = ({ 
-  handleTitleEdit, handleXY, handleDelete, 
+export const RenderBoard = ({
+  handleTitleEdit, handleXY, handleDelete,
   handleZ, handleTextEdit, handleScale }) => {
 
   const itemList = useSelector(state => state.items);
 
-  const renderSwitch = (id, title, type, src, text ) => {
+  const renderSwitch = (id, title, type, src, text) => {
     switch (type) {
       case 'image':
-        return <Wrapper>
-                <Input type="text" autoFocus onChange={(e)=>handleTitleEdit(e.target.value, id)} defaultValue={title}></Input>
-                <Image src={src} />
-                <Input type="text" autoFocus onChange={(e)=>handleTextEdit(e.target.value, id)} defaultValue={text}></Input>
-              </Wrapper>
+        return <ContentWrapper>
+          <Input type="text" autoFocus onChange={(e) => handleTitleEdit(e.target.value, id)} defaultValue={title}></Input>
+          <ImageWrapper>
+            <Image src={src} />
+          </ImageWrapper>
+          <Input type="text" autoFocus onChange={(e) => handleTextEdit(e.target.value, id)} defaultValue={text}></Input>
+        </ContentWrapper>
       case 'text':
-        return <Wrapper>
-                <Input type="text" autoFocus onChange={(e)=>handleTitleEdit(e.target.value, id)} defaultValue={title}></Input>
-                <Input type="text" autoFocus onChange={(e)=>handleTextEdit(e.target.value, id)} defaultValue={text}></Input>
-               </Wrapper>
+        return <ContentWrapper>
+          <Input type="text" autoFocus onChange={(e) => handleTitleEdit(e.target.value, id)} defaultValue={title}></Input>
+          <Input type="text" autoFocus onChange={(e) => handleTextEdit(e.target.value, id)} defaultValue={text}></Input>
+        </ContentWrapper>
     }
   }
 
   return itemList.items.length < 1 ? <p></p> : itemList.items.map((item, index) => {
 
     const handleStop = (e, data) => {
-      handleXY(item.id,data.x,data.y);
+      handleXY(item.id, data.x, data.y);
     };
 
     return (
       <Draggable
-      bounds="body"
-      defaultPosition={{x:item.x,y:item.y}}
-      onStop={handleStop}
+        bounds="body"
+        defaultPosition={{ x: item.x, y: item.y }}
+        onStop={handleStop}
       >
         <ComponentContainer key={item.id} zIndex={item.z} scale={item.scale}>
           <Wrapper scale={item.scale}>
-          <Container >
-            {renderSwitch(item.id, item.title, item.type, item.src, item.text)}
-          </Container>
-          <Panel>
-            <Button onClick={() => handleDelete(item.id)}>
-              <Close sx={{ fontSize: "15px" }} />
-            </Button>
-            <Button onClick={() => handleZ(item.id, "up")}>
-              <ArrowUpward sx={{ fontSize: "15px" }} />
-            </Button>
-            <Button onClick={() => handleZ(item.id, "down")}>
-              <ArrowDownward sx={{ fontSize: "15px" }} />
-            </Button>
-            <Button onClick={() => handleScale(item.id, "up")}>
-              <ZoomIn sx={{ fontSize: "15px" }} />
-            </Button>
-            <Button onClick={() => handleScale(item.id, "down")}>
-              <ZoomOut sx={{ fontSize: "15px" }} />
-            </Button>
-          </Panel>
+            <Container >
+              {renderSwitch(item.id, item.title, item.type, item.src, item.text)}
+            </Container>
+            <Panel>
+              <Button onClick={() => handleDelete(item.id)}>
+                <Close sx={{ fontSize: "15px" }} />
+              </Button>
+              <Button onClick={() => handleZ(item.id, "up")}>
+                <ArrowUpward sx={{ fontSize: "15px" }} />
+              </Button>
+              <Button onClick={() => handleZ(item.id, "down")}>
+                <ArrowDownward sx={{ fontSize: "15px" }} />
+              </Button>
+              <Button onClick={() => handleScale(item.id, "up")}>
+                <ZoomIn sx={{ fontSize: "15px" }} />
+              </Button>
+              <Button onClick={() => handleScale(item.id, "down")}>
+                <ZoomOut sx={{ fontSize: "15px" }} />
+              </Button>
+            </Panel>
           </Wrapper>
         </ComponentContainer>
       </Draggable>
