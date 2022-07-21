@@ -1,4 +1,4 @@
-![Mind.Net Logo](/public/mind_net.png)
+![Mind.Net Logo](/../public/mind_net.png)
 
 Mind.Net serves as a hub for you to imprint your stream of consciousness
               on the go. By loading images, videos, texts, you can create graphical collages, design ideas or thought processes
