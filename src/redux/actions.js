@@ -30,17 +30,23 @@ export const itemsSlice = createSlice({
         },
         editTitle: (state, action) => {
             let i = state.items.findIndex(e => e.id === action.payload.id);
-            state.items[i].title = action.payload.title;
+            state.items[i].title = action.payload.text;
         },
         editScale: (state, action) => {
             let i = state.items.findIndex(e => e.id === action.payload.id);
             action.payload.type === "up" ? state.items[i].scale += 0.25 : 
             state.items[i].scale === 0.5 ? state.items[i].scale = 0.5 : state.items[i].scale -= 0.25
         },
+        toggleEdit: (state, action) => {
+            let i = state.items.findIndex(e => e.id === action.payload.id);
+            action.payload.edit === true ? state.items[i].edit = true : 
+            state.items[i].edit = false;
+            console.log("edit mode: ", state.items[i].edit);
+        },
         
     },
 })
 
-export const { insertItem, removeItem, editZ, decrementZ, updateXY, editText, editTitle, editScale } = itemsSlice.actions
+export const { insertItem, removeItem, editZ, updateXY, editText, editTitle, editScale, toggleEdit } = itemsSlice.actions
 
 export default itemsSlice.reducer

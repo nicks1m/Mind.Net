@@ -137,7 +137,8 @@ const AddComponent = () => {
             z: 0,
             x: 550,
             y: 550,
-            scale: 1
+            scale: 1,
+            edit: false
         }));
         setComponent({
             type: "text",
