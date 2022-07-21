@@ -1,3 +1,5 @@
+![Mind.Net Logo]("/public/mind_net.png")
+
 Mind.Net serves as a hub for you to imprint your stream of consciousness
               on the go. By loading images, videos, texts, you can create graphical collages, design ideas or thought processes
               to aid you in your daily activities. Mind.Net begins as a tabula rasa and grows along with you whenever you want it to.
@@ -11,3 +13,4 @@ Mind.Net serves as a hub for you to imprint your stream of consciousness
 - Login and Save (backend)
 - Multiple boards
 - Export as board as image
+- Video support
