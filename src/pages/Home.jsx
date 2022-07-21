@@ -11,25 +11,12 @@ const Container = styled.div`
       position:relative;
 `
 const Board = styled.div`
-      position:relative;
+      position:absolute;
       width:100%;
       top:0;
       min-height:100vh;
 `
-const Description = styled.div``
 
-const Information = styled.div`
-      position:sticky;
-      top:0;
-      display:flex;
-      background-color:#f0f0f0;
-      width:100%;
-      height:30px;
-      justify-content:center;
-      align-content:center;
-      text-align:center;
-      z-index:5;
-`
 export const Home = () => {
       const [items, setItems] = useState([]);
       const [type, setType] = useState();
