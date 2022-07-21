@@ -4,7 +4,7 @@ import Introduction from '../components/Introduction'
 import RenderBoard from '../components/RenderBoard'
 import { Add, Remove, Close } from '@mui/icons-material'
 import { useSelector, useDispatch } from 'react-redux'
-import { insertItem, removeItem, incrementZ, decrementZ, updateXY } from '../redux/actions'
+import { insertItem, removeItem, editZ, updateXY, editText, editTitle, editScale } from '../redux/actions'
 
 
 const Container = styled.div`
@@ -16,7 +16,7 @@ const ComponentContainer = styled.div`
 `
 
 const Board = styled.div`
-position:relative;
+      position:relative;
       width:100%;
       top:0;
       min-height:100vh;
@@ -84,66 +84,79 @@ export const Home = () => {
       const [items, setItems] = useState([]);
       const [component, setComponent] = useState({
             type: "text",
-            text: "Enter Text",
-            src: "Enter Source",
+            title:"",
+            text: "",
+            src: "",
       })
       const [type, setType] = useState();
       const [field, setField] = useState();
       const types = ["text", "image"];
 
       const itemList = useSelector(state => state.items.items);
-      const dispatch = useDispatch()
-      console.log("item list retrieved: ", itemList);
+      const dispatch = useDispatch();
 
       useEffect(() => {
             itemList !== null && setItems(itemList);
       }, [itemList])
 
+      const handleTextEdit = (text,id) => {
+            dispatch(editText({id,text}));
+      };
+
+      const handleTitleEdit = (text,id) => {
+            dispatch(editTitle({id,text}));
+      };
 
       const handleDelete = (id) => {
-            dispatch(removeItem(id))
+            dispatch(removeItem(id));
       };
 
-      const handleZinc = (id) => {
-            dispatch(incrementZ(id))
-      };
-      const handleZdec = (id) => {
-            dispatch(decrementZ(id))
+      const handleZ = (id,type) => {
+            dispatch(editZ({id,type}));
       };
 
       const handleXY = (id,x,y) => {
             dispatch(updateXY({id,x,y}));
       }
 
-      const handleInput = (e) => {
+      const handleTextInput = (e) => {
+            e.preventDefault();
             setComponent({ ...component, text: e.target.value });
       };
 
+      const handleTitleInput = (e) => {
+            e.preventDefault();
+            setComponent({ ...component, title: e.target.value });
+      };
+
       const handleSrc = (e) => {
+            e.preventDefault();
             setComponent({ ...component, src: e.target.value });
       };
 
-
-
+      const handleScale = (id, type) => {
+            dispatch(editScale({id,type}));
+      };
 
       const addItem = (text) => {
             dispatch(insertItem({
-                  id: `${Math.floor(Math.random() * 100)}`,
-                  text: `${component["text"]}`,
+                  id: `${Math.floor(Math.random() * 10000)}`,
+                  title:`${component["title"]}`,
                   type: `${component["type"]}`,
+                  text: `${component["text"]}`,
                   src: `${component["src"]}`,
-                  z: 0,
+                  z:0,
                   x:0,
                   y:0,
+                  scale:1
             }));
             setComponent({
                   type: "text",
+                  title:"",
                   text: "",
                   src: "",
             })
       }
-
-
       return (
             <Container>
                   <Information>
@@ -154,15 +167,18 @@ export const Home = () => {
                               ))}
                         </FilterType>
                         <InputWrapper>
+                              <Label>Title: </Label>
+                              <Input value={component["title"]} onChange={(e) => handleTitleInput(e)}></Input>
                               <Label>Text: </Label>
-                              <Input onChange={(e) => handleInput(e)}></Input>
+                              <Input value={component["text"]} onChange={(e) => handleTextInput(e)}></Input>
                               <Label>Src: </Label>
-                              <Input onChange={(e) => handleSrc(e)}></Input>
+                              <Input value={component["src"]} onChange={(e) => handleSrc(e)}></Input>
                         </InputWrapper>
                         <Button onClick={() => addItem(field)}>Add</Button>
                   </Information>
                   <Board>
-                        <RenderBoard handleXY={handleXY} handleDelete={handleDelete} handleZinc={handleZinc} handleZdec={handleZdec} />
+                        <RenderBoard handleTitleEdit={handleTitleEdit} handleXY={handleXY} handleDelete={handleDelete}
+                        handleZ={handleZ} handleTextEdit={handleTextEdit} handleScale={handleScale} />
                   </Board>
             </Container>
       )
