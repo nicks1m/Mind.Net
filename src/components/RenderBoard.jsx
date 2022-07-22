@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import Draggable from 'react-draggable';
 import { ArrowUpward, ArrowDownward, Close, ZoomIn, ZoomOut, Edit, Check } from '@mui/icons-material';
 import { useSelector, useDispatch } from 'react-redux';
-import { toggleEdit } from '../redux/actions';
+import { toggleEdit, editRadius, editBgColor } from '../redux/actions';
+import { CompactPicker } from 'react-color';
 
 
 
@@ -19,37 +20,29 @@ const Wrapper = styled.div`
     position:relative;
     display:flex;
     transition-duration: 150ms;
+    align-items:flex-start;
     transform:${props => `scale(${props.scale})`};
-
-
 `
 
 const ContentWrapper = styled.div``
 
 const ComponentContainer = styled.div`
     position:absolute;
-    display:flex;
     z-index:${props => props.zIndex};
-    min-width:130px;
-    min-height:50px;
-    max-width:350px;
-    max:height:300px;
     justify-content:center;
     text-align:center;
     align-content:center;
     &:hover ${Panel} {
       opacity:1;
     }
-
-
-
 `
 const Container = styled.div`
-    background-color:white;
-    padding:20px;
+    background-color:${props => props.rgb};
+    padding:20px 20px;
     position:relative;
     border:0.5px solid grey;
-    // border-radius:10%;
+    border-radius:${props => `${props.radius}%`};
+    overflow:hidden;
 
     
 `
@@ -62,6 +55,12 @@ const Button = styled.button`
     position:relative;
     
 `
+const ButtonGroup = styled.div`
+    display:flex;
+    justify-content:space-between;
+    
+`
+
 const Title = styled.div`
     position:relative;
     font-size:20px;
@@ -73,6 +72,7 @@ const Desc = styled.div`
 `
 const Input = styled.input`
     position:relative;
+    width:100%;
     font-size:20px;
     border:0.5px solid grey;
     margin-bottom:5px;
@@ -87,13 +87,18 @@ const Image = styled.img`
 `
 const EditPanel = styled.div`
       width:100%;
+      font-size:16px;
+      font-weight:900;
+      z-index:999;
 `
 const ImageWrapper = styled.div`
       width:100%;
       margin-top:5px;
 `
+const ColorPicker = styled.div``
 const Id = styled.span``
 const Video = styled.video``
+
 
 export const RenderBoard = ({
   handleTitleEdit, handleXY, handleDelete,
@@ -101,24 +106,6 @@ export const RenderBoard = ({
 
   const itemList = useSelector(state => state.items);
   const dispatch = useDispatch();
-
-  const renderSwitch = (id, title, type, src, text) => {
-    switch (type) {
-      case 'image':
-        return <ContentWrapper>
-          <Input type="text" onChange={(e) => handleTitleEdit(e.target.value, id)} defaultValue={title}></Input>
-          <ImageWrapper>
-            <Image src={src} />
-          </ImageWrapper>
-          <Input type="text" onChange={(e) => handleTextEdit(e.target.value, id)} defaultValue={text}></Input>
-        </ContentWrapper>
-      case 'text':
-        return <ContentWrapper>
-          <Input type="text" onChange={(e) => handleTitleEdit(e.target.value, id)} defaultValue={title}></Input>
-          <Input type="text" onChange={(e) => handleTextEdit(e.target.value, id)} defaultValue={text}></Input>
-        </ContentWrapper>
-    }
-  }
 
   return itemList.items.length < 1 ? <p></p> : itemList.items.map((item, index) => {
 
@@ -130,18 +117,29 @@ export const RenderBoard = ({
       dispatch(toggleEdit({ id, edit }));
     }
 
+    const handleBorderRadius = (id, radius) => {
+      dispatch(editRadius({ id, radius }));
+      console.log(radius);
+    }
+
+    const handleColorChange = (id, color) => {
+      let rgb = color.hex;
+      dispatch(editBgColor({ id, rgb }));
+    }
+
     return (
       <Draggable
         bounds="body"
         defaultPosition={{ x: item.x, y: item.y }}
         onStop={handleStop}
+        disabled={item.edit}
       >
         <ComponentContainer key={item.id} zIndex={item.z} >
           <Wrapper scale={item.scale}>
-            <Container >
+            <Container radius={item.radius} rgb={item.rgb}>
               <Title>{item.title}</Title>
               <Desc>{item.text}</Desc>
-              {/* {renderSwitch(item.id, item.title, item.type, item.src, item.text)} */}
+              {item.src === "" ? null : <Image src={item.src} />}
             </Container>
             <Panel>
               <Button onClick={() => handleDelete(item.id)}>
@@ -166,12 +164,24 @@ export const RenderBoard = ({
                 <Check sx={{ fontSize: "15px" }} />
               </Button>
             </Panel>
-              {item.edit ? 
-            <EditPanel>
-              <Input type="text" onChange={(e) => handleTitleEdit(e.target.value, item.id)} defaultValue={item.title}></Input>
-              <Input type="text" onChange={(e) => handleTextEdit(e.target.value, item.id)} defaultValue={item.text}></Input>
-            </EditPanel> : null
-              }
+            {item.edit ?
+              <EditPanel>
+                <p>EDIT MODE</p>
+                <Input type="text" onChange={(e) => handleTitleEdit(e.target.value, item.id)} defaultValue={item.title}></Input>
+                <Input type="text" onChange={(e) => handleTextEdit(e.target.value, item.id)} defaultValue={item.text}></Input>
+                <ButtonGroup>
+                  <Button onClick={() => handleBorderRadius(item.id, 0)}>0%</Button>
+                  <Button onClick={() => handleBorderRadius(item.id, 10)}>10%</Button>
+                  <Button onClick={() => handleBorderRadius(item.id, 20)}>20%</Button>
+                  <Button onClick={() => handleBorderRadius(item.id, 30)}>30%</Button>
+                  <Button onClick={() => handleBorderRadius(item.id, 40)}>40%</Button>
+                  <Button onClick={() => handleBorderRadius(item.id, 50)}>50%</Button>
+                </ButtonGroup>
+                <ColorPicker>
+                  <CompactPicker color={item.rgb} onChangeComplete={(color) => handleColorChange(item.id, color)} />
+                </ColorPicker>
+              </EditPanel> : null
+            }
           </Wrapper>
         </ComponentContainer>
       </Draggable>

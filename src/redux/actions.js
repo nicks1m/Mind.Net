@@ -43,10 +43,18 @@ export const itemsSlice = createSlice({
             state.items[i].edit = false;
             console.log("edit mode: ", state.items[i].edit);
         },
+        editRadius: (state, action) => {
+            let i = state.items.findIndex(e => e.id === action.payload.id);
+            state.items[i].radius = action.payload.radius;
+        },
+        editBgColor: (state, action) => {
+            let i = state.items.findIndex(e => e.id === action.payload.id);
+            state.items[i].rgb = action.payload.rgb;
+        },
         
     },
 })
 
-export const { insertItem, removeItem, editZ, updateXY, editText, editTitle, editScale, toggleEdit } = itemsSlice.actions
+export const { insertItem, removeItem, editZ, updateXY, editText, editTitle, editScale, toggleEdit, editRadius, editBgColor } = itemsSlice.actions
 
 export default itemsSlice.reducer

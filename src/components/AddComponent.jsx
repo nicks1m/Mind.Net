@@ -1,10 +1,15 @@
 import { React, useState } from 'react';
 import { useDispatch } from 'react-redux'
+import { keyframes } from 'styled-components'
 import styled from 'styled-components'
 import { insertItem } from '../redux/actions'
 import { Add, Close } from '@mui/icons-material';
 
-
+const spinAnimation = keyframes `
+    0% { transform:rotate(0) }
+    100% { transform:rotate(360deg) }
+   }
+   `
 const Information = styled.div`
       z-index:999;
       text-transform:uppercase;
@@ -52,11 +57,21 @@ const ToggleContainer = styled.div`
       z-index:999;
 `
 const Toggle = styled.button`
+      display: flex;
+      justify-content: center;
+      align-items: center;
       width:50px;
       height:50px;
       background-color:#fcfcfc;
       border:0.5px solid grey;
+      border-radius:50%;
+      &:hover{
+      animation-name: ${spinAnimation};
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      }
 `
+
 const TopBar = styled.div`
       height:250px;
       width:400px; 
@@ -136,9 +151,11 @@ const AddComponent = () => {
             src: `${component["src"]}`,
             z: 0,
             x: 550,
-            y: 550,
+            y: 250,
             scale: 1,
-            edit: false
+            edit: false,
+            radius:0,
+            rgb:"#ffffff"
         }));
         setComponent({
             type: "text",
